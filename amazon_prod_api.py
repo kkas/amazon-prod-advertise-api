@@ -42,6 +42,8 @@ class AmazonProdAdvertisingAPI(object):
         http://docs.aws.amazon.com/ja_jp/AWSECommerceService/latest/DG/CHAP_ResponseGroupsList.html
         """
         response_groups = [
+            'Images',
+            'ItemIds',
             'Medium',
         ]
         options['ResponseGroup'] = ','.join(response_groups)
