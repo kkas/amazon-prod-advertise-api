@@ -36,22 +36,22 @@ class AmazonProdAdvertisingAPI(object):
         options['Operation'] = 'ItemSearch'
         options['Keywords'] = keyword
         options['SearchIndex'] = searchIndex or None
-        return self.generate_url(options)
+        return self._generate_url(options)
 
     """
     python-dateutil:
         https://dateutil.readthedocs.org/en/latest/
     """
-    def generate_timestamp(self):
+    def _generate_timestamp(self):
         # TODO: Need to convert GMT
         now = datetime.now()
         return now.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    def generate_url(self, options):
+    def _generate_url(self, options):
         options['Service'] = 'AWSECommerceService'
         options['AWSAccessKeyId'] = self.access_key_id
         options['AssociateTag'] = self.associate_tag
-        options['Timestamp'] = self.generate_timestamp()
+        options['Timestamp'] = self._generate_timestamp()
 
         # 'None' が含まれている場合は削除する.
         for k, v in options.items():
