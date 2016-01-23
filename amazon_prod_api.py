@@ -50,10 +50,6 @@ class AmazonProdAdvertisingAPI(object):
 
         return self._generate_url(options)
 
-    """
-    python-dateutil:
-        https://dateutil.readthedocs.org/en/latest/
-    """
     def _generate_timestamp(self):
         # TODO: Need to convert GMT
         now = datetime.now()
