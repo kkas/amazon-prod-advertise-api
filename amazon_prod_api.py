@@ -36,6 +36,16 @@ class AmazonProdAdvertisingAPI(object):
         options['Operation'] = 'ItemSearch'
         options['Keywords'] = keyword
         options['SearchIndex'] = searchIndex or None
+
+        """
+        Response Groups
+        http://docs.aws.amazon.com/ja_jp/AWSECommerceService/latest/DG/CHAP_ResponseGroupsList.html
+        """
+        response_groups = [
+            'Medium',
+        ]
+        options['ResponseGroup'] = ','.join(response_groups)
+
         return self._generate_url(options)
 
     """
