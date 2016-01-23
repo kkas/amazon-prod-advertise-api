@@ -93,7 +93,12 @@ def main():
     config = loadconf()
     aaa = AmazonProdAdvertisingAPI(**config)
 
-    print aaa.item_lookup(u'翔泳社', searchIndex="Books")
+    """
+    Search Index (JP)
+    http://docs.aws.amazon.com/ja_jp/AWSECommerceService/latest/DG/LocaleJP.html
+    """
+    # print aaa.item_lookup(u'翔泳社', searchIndex="Books")
+    print aaa.item_lookup(u'デジタルカメラ', searchIndex="Electronics")
 
 if __name__ == "__main__":
     main()
