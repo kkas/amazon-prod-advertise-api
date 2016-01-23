@@ -48,7 +48,17 @@ class AmazonProdAdvertisingAPI(object):
         ]
         options['ResponseGroup'] = ','.join(response_groups)
 
-        return self._generate_url(options)
+        return self._call_API(options)
+
+    def _call_API(self, options):
+        url = self._generate_url(options)
+        res = self._fetch(url)
+        print res
+
+    def _fetch(self, url):
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        return response.read()
 
     def _generate_timestamp(self):
         # TODO: Need to convert GMT
