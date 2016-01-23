@@ -47,9 +47,6 @@ class AmazonProdAdvertisingAPI(object):
         now = datetime.now()
         return now.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    def generate_signature(self):
-        pass
-
     def generate_url(self, options):
         options['Service'] = 'AWSECommerceService'
         options['AWSAccessKeyId'] = self.access_key_id
