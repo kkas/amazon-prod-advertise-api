@@ -53,7 +53,7 @@ class AmazonProdAdvertisingAPI(object):
     def _call_api(self, options):
         url = self._generate_url(options)
         res = self._fetch(url)
-        print res
+        return res
 
     def _fetch(self, url):
         req = urllib2.Request(url)
