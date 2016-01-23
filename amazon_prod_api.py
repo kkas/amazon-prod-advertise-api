@@ -48,9 +48,9 @@ class AmazonProdAdvertisingAPI(object):
         ]
         options['ResponseGroup'] = ','.join(response_groups)
 
-        return self._call_API(options)
+        return self._call_api(options)
 
-    def _call_API(self, options):
+    def _call_api(self, options):
         url = self._generate_url(options)
         res = self._fetch(url)
         print res
