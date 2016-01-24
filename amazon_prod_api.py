@@ -6,9 +6,6 @@ import hmac, hashlib
 import json
 
 from lxml import etree
-# from pyquery import PyQuery as pq
-# from BeautifulSoup4 import BeautifulStoneSoup
-# from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup
 
 from config import loadconf
