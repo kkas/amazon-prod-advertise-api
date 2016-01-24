@@ -3,6 +3,13 @@ from datetime import datetime
 import urllib2
 import base64
 import hmac, hashlib
+import json
+
+from lxml import etree
+# from pyquery import PyQuery as pq
+# from BeautifulSoup4 import BeautifulStoneSoup
+# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from config import loadconf
 
@@ -23,6 +30,7 @@ class AmazonProdAdvertisingAPI(object):
         リクエストパラメタ一覧：
         http://docs.aws.amazon.com/AWSECommerceService/latest/DG/CommonRequestParameters.html
     """
+
     def __init__(self, access_key_id, secret_key, associate_tag):
         self.access_key_id = access_key_id
         self.secret_key = secret_key
@@ -45,6 +53,7 @@ class AmazonProdAdvertisingAPI(object):
             'Images',
             'ItemIds',
             'Medium',
+
         ]
         options['ResponseGroup'] = ','.join(response_groups)
 
@@ -53,7 +62,58 @@ class AmazonProdAdvertisingAPI(object):
     def _call_api(self, options):
         url = self._generate_url(options)
         res = self._fetch(url)
-        return res
+
+        # このままだと改行なしのStringになるため、改行を付与してリターン
+        tree = etree.fromstring(res)
+        res = etree.tostring(tree, pretty_print=True, encoding="utf-8")
+
+        return self._parse(res)
+
+    def _parse(self, res, form='json'):
+        soup = BeautifulSoup(res, features='xml')
+        items = soup.find_all('Item')
+
+        if form == 'json':
+            lst = []
+            for item in items:
+                lst.append(self._collect_info(item))
+            out = json.dumps(lst)
+
+        return out
+
+    def _collect_info(self, item):
+        TARGET_ELEMENTS = [
+            'ASIN',
+            'Title',
+            'LowestUsedPrice',
+            'Image',
+        ]
+        EMPTY_STRING = 'N/A'
+
+        _dict = dict()
+
+        for elem in TARGET_ELEMENTS:
+            try:
+                if elem == 'Image':
+                    # image として設定できる値は複数存在するが暫定的に 'TinyImage' を利用する
+                    _dict[elem] = dict(
+                        URL=item.find('TinyImage').URL.text,
+                        Height=item.find('TinyImage').Height.text,
+                        Width=item.find('TinyImage').Width.text,
+                    )
+                elif elem == 'LowestUsedPrice':
+                    # formatted price, e.g. '¥ 1,000', または None を返却する
+                    _dict[elem] = item.find('FormattedPrice').string
+                # 上記(一手間必要な要素)以外の場合
+                else:
+                    _dict[elem] = item.find(elem).string
+            except AttributeError:
+                # 取得した値が None の場合. 空文字に置き換えする.
+                # dict に get() を利用しないと、KeyError が送出されてしまう.
+                if _dict.get(elem) is None:
+                    _dict[elem] = EMPTY_STRING
+
+        return _dict
 
     def _fetch(self, url):
         req = urllib2.Request(url)
