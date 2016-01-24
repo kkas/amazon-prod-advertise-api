@@ -51,8 +51,10 @@ class AmazonProdAdvertisingAPI(object):
         """
         response_groups = [
             'Images',
-            'ItemIds',
-            'Medium',
+            # 'ItemIds',
+            # 'Medium',
+            'Small',
+            'OfferSummary'
 
         ]
         options['ResponseGroup'] = ','.join(response_groups)
